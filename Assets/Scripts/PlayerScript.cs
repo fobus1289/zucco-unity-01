@@ -1,16 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour,ITakeDamage
+public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
 {
 
     private bool _canMove;
     private Coroutine _moveCoroutine;
     private Animator _animator;
     private Vector3 clickPosition;
+    [SerializeField] private float xMaxSpeed = 300F;
+    [SerializeField] private CinemachineFreeLook _cinemachineFreeLook;
+    [SerializeField] private float HP = 500F;    
+    
     private void Start()
     {
         _animator = this.GetComponent<Animator>();
@@ -18,6 +23,12 @@ public class PlayerScript : MonoBehaviour,ITakeDamage
 
     public void TakeDamage(int damage)
     {
+        HP -= damage;
+        
+        if (HP <= 0)
+        {
+            GameManagerScript.Instance.SetSpawn(this);
+        }
         
     }
 
@@ -43,6 +54,17 @@ public class PlayerScript : MonoBehaviour,ITakeDamage
     
     private void Update()
     {
+
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            _cinemachineFreeLook.m_YAxis.Value = 0;
+            _cinemachineFreeLook.m_XAxis.m_MaxSpeed = xMaxSpeed;
+        }
+        else
+        {
+            _cinemachineFreeLook.m_XAxis.m_MaxSpeed = 0F;
+        }
+        
         if (Input.GetMouseButton(0))
         {
             var position = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -53,12 +75,14 @@ public class PlayerScript : MonoBehaviour,ITakeDamage
                 switch (point.collider.tag)
                 {
                     case "Ground":
-                        clickPosition = point.point;
-                        if (_moveCoroutine ==null)
+                        
+                        if (_moveCoroutine !=null)
                         {
-                            _moveCoroutine = StartCoroutine(Move(clickPosition));
+                            StopCoroutine(_moveCoroutine);
                         }
-
+                        
+                        _moveCoroutine = StartCoroutine(Move(point.point));
+                        
                         break;
                 }
             }
@@ -76,5 +100,19 @@ public class PlayerScript : MonoBehaviour,ITakeDamage
 
         transform.rotation = look;
     }
-    
+
+    public void Spawn()
+    {
+       
+    }
+
+    public void DeSpawn()
+    {
+        
+    }
+
+    public float RespawnTime()
+    {
+        return 5F;
+    }
 }
