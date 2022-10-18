@@ -4,21 +4,49 @@ using System.Collections.Generic;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
 {
 
     private bool _canMove;
     private Coroutine _moveCoroutine;
+    private Coroutine _moveAndAttackCoroutine;
     private Animator _animator;
     private Vector3 clickPosition;
+    public Slider Slider;
     [SerializeField] private float xMaxSpeed = 300F;
     [SerializeField] private CinemachineFreeLook _cinemachineFreeLook;
-    [SerializeField] private float HP = 500F;    
-    
+    [SerializeField] private float HP = 500F;
+    [SerializeField] private Transform weaponSlot;
+    [SerializeField] private List<GameObject> Weapons;
+    [SerializeField] private Button WeaponUI;
+    [SerializeField] private Transform ActionPanelUI;
+    private GameObject _currenWeapon = null;
     private void Start()
     {
         _animator = this.GetComponent<Animator>();
+
+        foreach (var weapon in Weapons)
+        {
+            
+            var newWeaponUI = Instantiate(WeaponUI,ActionPanelUI);
+            newWeaponUI.transform.SetParent(ActionPanelUI);
+            
+            newWeaponUI.onClick.AddListener(() =>
+            {
+                if (_currenWeapon)
+                {
+                    GameObject.Destroy(_currenWeapon);
+                }
+                
+                var newWeapon = Instantiate(weapon,weaponSlot);
+                newWeapon.transform.SetParent(weaponSlot);
+                _currenWeapon = newWeapon;
+            });
+            
+        }
+        
     }
 
     public void TakeDamage(int damage)
@@ -51,6 +79,42 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
 
         _moveCoroutine = null;
     }
+
+
+    private IEnumerator MoveAndAttack(Transform target)
+    {
+        var enemy =  target.GetComponent<Enemy>();
+
+        if (enemy == null)
+        {
+            yield break;
+        }
+
+        while (!enemy.IsDie)
+        {
+            Rotate(target.position);
+            if (Vector3.Distance(transform.position,target.position) > 1.2F)
+            {
+                _animator.SetBool("attack",false);
+                _animator.SetBool("run",true);
+                var newPos = Vector3.MoveTowards(
+                    transform.position, 
+                    target.position, 
+                    2F * Time.deltaTime
+                );
+                transform.position = newPos;
+            }
+            else
+            {
+                _animator.SetBool("run",false);
+                _animator.SetBool("attack",true);
+            }
+            
+            yield return null;
+        }
+        _animator.SetBool("attack",false);
+        _animator.SetBool("run",false);
+    }
     
     private void Update()
     {
@@ -75,7 +139,11 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
                 switch (point.collider.tag)
                 {
                     case "Ground":
-                        
+                        Slider.gameObject.SetActive(false);
+                        if (_moveAndAttackCoroutine!=null)
+                        {
+                            StopCoroutine(_moveAndAttackCoroutine);
+                        }
                         if (_moveCoroutine !=null)
                         {
                             StopCoroutine(_moveCoroutine);
@@ -83,6 +151,17 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
                         
                         _moveCoroutine = StartCoroutine(Move(point.point));
                         
+                        break;
+                    case "Mob":
+                        if (_moveAndAttackCoroutine!=null)
+                        {
+                            StopCoroutine(_moveAndAttackCoroutine);
+                        }
+                        if (_moveCoroutine !=null)
+                        {
+                            StopCoroutine(_moveCoroutine);
+                        }
+                        _moveAndAttackCoroutine = StartCoroutine(MoveAndAttack(point.transform));
                         break;
                 }
             }
@@ -114,5 +193,10 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
     public float RespawnTime()
     {
         return 5F;
+    }
+    
+    public GameObject GetGameObject()
+    {
+        return gameObject;
     }
 }

@@ -1690,7 +1690,7 @@ GameObject:
   - component: {fileID: 7551452915901795408}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Mob
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1778,6 +1778,7 @@ MonoBehaviour:
   target: {fileID: 0}
   agroRange: 15
   attackDistance: 1.5
+  HP: 0
 --- !u!1 &7551452914266330069
 GameObject:
   m_ObjectHideFlags: 0

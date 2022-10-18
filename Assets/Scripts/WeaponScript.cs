@@ -11,7 +11,7 @@ public class WeaponScript : MonoBehaviour
         var component = other.GetComponent<ITakeDamage>();
         if (component != null)
         {
-            component.TakeDamage(Random.Range(2,15));
+            component.TakeDamage(Random.Range(15,35));
         }
     }
 }

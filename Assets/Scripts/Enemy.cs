@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
 {
@@ -12,9 +13,11 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
     [SerializeField]private float agroRange;
     [SerializeField] private float attackDistance=1.5F;
     [SerializeField] private float HP = 0F;
+    public Slider Slider;
     private float maxHP = 0F;
-    private float spawnTime = 15F;
-    
+    private float spawnTime = 5F;
+    public bool IsDie => HP <= 0F;
+
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -50,6 +53,11 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
         }
     }
 
+    public void SetHP(float hp)
+    {
+        maxHP = hp;
+        HP = hp;
+    }
     private void Move()
     {
         var newPos= Vector3.MoveTowards(_transform.position, target.transform.position, 2F * Time.deltaTime);
@@ -72,12 +80,20 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
         _transform.rotation = look;
     }
 
+    private void OnMouseDown()
+    {
+        Slider.gameObject.SetActive(true);
+        Slider.maxValue = maxHP;
+        Slider.value = HP;
+    }
+
     public void TakeDamage(int damage)
     {
         HP -= damage;
-        
+        Slider.value = HP;
         if (HP <= 0)
         {
+            _animator.SetBool("run",false);
             _animator.SetBool("attack",false);
             _animator.SetBool("die",true);
             Invoke(nameof(Death),3F);
@@ -87,12 +103,14 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
 
     private void Death()
     {
+        Slider.gameObject.SetActive(false);
         GameManagerScript.Instance.SetSpawn(this);
     }
 
     public void Spawn()
     {
-        gameObject.SetActive(true);
+        _animator.SetBool("die",false);
+        HP = maxHP;
     }
 
     public void DeSpawn()
@@ -103,5 +121,10 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
     public float RespawnTime()
     {
         return spawnTime;
+    }
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
     }
 }
