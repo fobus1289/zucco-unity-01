@@ -22,10 +22,6 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
     {
         _animator = GetComponent<Animator>();
         _transform = GetComponent<Transform>();
-        if (target == null)
-        {
-            target = FindObjectOfType<Target>();
-        }
     }
     
     private void Update()
@@ -86,9 +82,14 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
         Slider.maxValue = maxHP;
         Slider.value = HP;
     }
-
+    
     public void TakeDamage(int damage)
     {
+        if (!target)
+        {
+            target = FindObjectOfType<Target>();
+        }
+        
         HP -= damage;
         Slider.value = HP;
         if (HP <= 0)
@@ -110,6 +111,7 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
     public void Spawn()
     {
         _animator.SetBool("die",false);
+        target = null;
         HP = maxHP;
     }
 

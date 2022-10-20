@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
+public class PlayerScript : MonoBehaviour,ISpawn
 {
 
     private bool _canMove;
@@ -19,10 +19,11 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
     [SerializeField] private CinemachineFreeLook _cinemachineFreeLook;
     [SerializeField] private float HP = 500F;
     [SerializeField] private Transform weaponSlot;
-    [SerializeField] private List<GameObject> Weapons;
+    [SerializeField] public List<WeaponScript> Weapons;
     [SerializeField] private Button WeaponUI;
     [SerializeField] private Transform ActionPanelUI;
-    private GameObject _currenWeapon = null;
+    private WeaponScript _currenWeapon = null;
+    private bool _canAttack => _currenWeapon;
     private void Start()
     {
         _animator = this.GetComponent<Animator>();
@@ -37,7 +38,7 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
             {
                 if (_currenWeapon)
                 {
-                    GameObject.Destroy(_currenWeapon);
+                    Destroy(_currenWeapon.gameObject);
                 }
                 
                 var newWeapon = Instantiate(weapon,weaponSlot);
@@ -48,16 +49,19 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
         }
         
     }
-
-    public void TakeDamage(int damage)
+    
+    public void ChangeWeapon(int index)
     {
-        HP -= damage;
-        
-        if (HP <= 0)
+        if (_currenWeapon)
         {
-            GameManagerScript.Instance.SetSpawn(this);
+            Destroy(_currenWeapon.gameObject);
         }
-        
+
+        var weaponScript = Weapons[index];
+
+        var newWeapon = Instantiate(weaponScript,weaponSlot);
+        newWeapon.transform.SetParent(weaponSlot);
+        _currenWeapon = newWeapon;
     }
 
     private IEnumerator Move(Vector3 point)
@@ -107,7 +111,7 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
             else
             {
                 _animator.SetBool("run",false);
-                _animator.SetBool("attack",true);
+                _animator.SetBool("attack",_canAttack);
             }
             
             yield return null;
@@ -136,9 +140,16 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
             if (Physics.Raycast(position,out var point ))
             {
 
+                if (_currenWeapon)
+                {
+                    _currenWeapon.GetComponent<BoxCollider>().enabled = false;
+                }
+                
                 switch (point.collider.tag)
                 {
                     case "Ground":
+                        _animator.SetBool("attack",false);
+                        
                         Slider.gameObject.SetActive(false);
                         if (_moveAndAttackCoroutine!=null)
                         {
@@ -184,7 +195,15 @@ public class PlayerScript : MonoBehaviour,ITakeDamage,ISpawn
     {
        
     }
-
+    
+    public void EnableCollider(int enable)
+    {
+        if (_currenWeapon)
+        {
+            _currenWeapon.GetComponent<BoxCollider>().enabled = enable ==1;
+        }
+    }
+    
     public void DeSpawn()
     {
         

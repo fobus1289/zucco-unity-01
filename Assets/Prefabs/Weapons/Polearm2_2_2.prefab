@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 6983033344977587684}
   - component: {fileID: 6289114431479071297}
   - component: {fileID: 8116501416174368395}
+  - component: {fileID: -7588694147191172970}
+  - component: {fileID: -3734190951263400608}
   m_Layer: 0
   m_Name: Polearm2_2_2
   m_TagString: Untagged
@@ -83,3 +85,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &-7588694147191172970
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7756156751655245662}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.29731578, y: 1.7321513, z: 0.13797249}
+  m_Center: {x: 0.04736502, y: 0.31064698, z: 0.00000013016425}
+--- !u!114 &-3734190951263400608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7756156751655245662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff371dba8470c9e4db2ec9e8be3c7e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

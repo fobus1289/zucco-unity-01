@@ -362,6 +362,8 @@
 "Assets/Scripts/Enemy.cs"
 "Assets/Scripts/ISpawn.cs"
 "Assets/Scripts/ITakeDamage.cs"
+"Assets/Scripts/ITarget.cs"
+"Assets/Scripts/PlayerInputScript.cs"
 "Assets/Scripts/PlayerScript.cs"
 "Assets/Scripts/Target.cs"
 "Assets/Scripts/WeaponScript.cs"
