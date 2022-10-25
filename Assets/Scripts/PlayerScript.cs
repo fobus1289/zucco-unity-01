@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour,ISpawn
@@ -22,12 +24,77 @@ public class PlayerScript : MonoBehaviour,ISpawn
     [SerializeField] public List<WeaponScript> Weapons;
     [SerializeField] private Button WeaponUI;
     [SerializeField] private Transform ActionPanelUI;
+
+    [SerializeField] private InputAction mouseLeft;
+
+    private void OnDisable()
+    {
+        mouseLeft.performed -= ClickLeftMouse;
+        mouseLeft.Dispose();
+    }
+
+    private void OnEnable()
+    {
+        mouseLeft.performed += ClickLeftMouse;
+        
+        mouseLeft.Enable();
+    }
+
+    private void ClickLeftMouse(InputAction.CallbackContext ctx)
+    {
+        var position = Camera.main.ScreenPointToRay(Input.mousePosition);
+                
+         
+        if (!EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(position,out var point ))
+        {
+            if (_currenWeapon)
+            {
+                _currenWeapon.GetComponent<BoxCollider>().enabled = false;
+            }
+                
+            switch (point.collider.tag)
+            {
+                case "Ground":
+                    _animator.SetBool("attack",false);
+                        
+                    Slider.gameObject.SetActive(false);
+                    if (_moveAndAttackCoroutine!=null)
+                    {
+                        StopCoroutine(_moveAndAttackCoroutine);
+                    }
+                    if (_moveCoroutine !=null)
+                    {
+                        StopCoroutine(_moveCoroutine);
+                    }
+                        
+                    _moveCoroutine = StartCoroutine(Move(point.point));
+                        
+                    break;
+                case "Mob":
+                    if (_moveAndAttackCoroutine!=null)
+                    {
+                        StopCoroutine(_moveAndAttackCoroutine);
+                    }
+                    if (_moveCoroutine !=null)
+                    {
+                        StopCoroutine(_moveCoroutine);
+                    }
+                    _moveAndAttackCoroutine = StartCoroutine(MoveAndAttack(point.transform));
+                    break;
+            }
+        }
+
+    }
+    
+    
     private WeaponScript _currenWeapon = null;
     private bool _canAttack => _currenWeapon;
     private void Start()
     {
         _animator = this.GetComponent<Animator>();
-
+        
+        ActionPanelUI =  GameObject.Find("ActionPanel")?.transform;
+        
         foreach (var weapon in Weapons)
         {
             
@@ -122,7 +189,6 @@ public class PlayerScript : MonoBehaviour,ISpawn
     
     private void Update()
     {
-
         if (Input.GetKey(KeyCode.Mouse1))
         {
             _cinemachineFreeLook.m_YAxis.Value = 0;
@@ -131,52 +197,6 @@ public class PlayerScript : MonoBehaviour,ISpawn
         else
         {
             _cinemachineFreeLook.m_XAxis.m_MaxSpeed = 0F;
-        }
-        
-        if (Input.GetMouseButton(0))
-        {
-            var position = Camera.main.ScreenPointToRay(Input.mousePosition);
-            
-            if (Physics.Raycast(position,out var point ))
-            {
-
-                if (_currenWeapon)
-                {
-                    _currenWeapon.GetComponent<BoxCollider>().enabled = false;
-                }
-                
-                switch (point.collider.tag)
-                {
-                    case "Ground":
-                        _animator.SetBool("attack",false);
-                        
-                        Slider.gameObject.SetActive(false);
-                        if (_moveAndAttackCoroutine!=null)
-                        {
-                            StopCoroutine(_moveAndAttackCoroutine);
-                        }
-                        if (_moveCoroutine !=null)
-                        {
-                            StopCoroutine(_moveCoroutine);
-                        }
-                        
-                        _moveCoroutine = StartCoroutine(Move(point.point));
-                        
-                        break;
-                    case "Mob":
-                        if (_moveAndAttackCoroutine!=null)
-                        {
-                            StopCoroutine(_moveAndAttackCoroutine);
-                        }
-                        if (_moveCoroutine !=null)
-                        {
-                            StopCoroutine(_moveCoroutine);
-                        }
-                        _moveAndAttackCoroutine = StartCoroutine(MoveAndAttack(point.transform));
-                        break;
-                }
-            }
-            
         }
     }
     

@@ -1,0 +1,44 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GameMangerUIScript : MonoBehaviour
+{
+
+    [SerializeField] private Transform playerPanel;
+    [SerializeField] private Button playerBtnPrefab;
+    [SerializeField] private List<PlayerControllerScript> players;
+
+    private PlayerControllerScript _currentPlayer;
+    
+    private void Awake()
+    {
+
+        print(Resources.Load("Assets/Prefabs/Player2.prefab"));
+        
+        foreach (var player in players)
+        {
+           var currentBtn = Instantiate(playerBtnPrefab, playerPanel);
+            
+           currentBtn.transform.SetParent(playerPanel);
+
+           currentBtn.GetComponentInChildren<TextMeshProUGUI>().SetText(player.name);
+           
+           currentBtn.onClick.AddListener(() =>
+           {
+               if (_currentPlayer)
+               {
+                   Destroy(_currentPlayer.gameObject);
+               }
+               
+               _currentPlayer = Instantiate(player,
+                   new Vector3(0,0,-6.5F)
+               ,new Quaternion(0,-180F,0,0));
+
+           });
+        }
+    }
+}
