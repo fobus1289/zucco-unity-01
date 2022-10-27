@@ -12,13 +12,10 @@ public class GameMangerUIScript : MonoBehaviour
     [SerializeField] private Button playerBtnPrefab;
     [SerializeField] private List<PlayerControllerScript> players;
 
-    private PlayerControllerScript _currentPlayer;
+    public PlayerControllerScript _currentPlayer { private set; get; }
     
     private void Awake()
     {
-
-        print(Resources.Load("Assets/Prefabs/Player2.prefab"));
-        
         foreach (var player in players)
         {
            var currentBtn = Instantiate(playerBtnPrefab, playerPanel);

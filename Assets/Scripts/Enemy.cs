@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
     [SerializeField] private float attackDistance=1.5F;
     [SerializeField] private float HP = 0F;
     public Slider Slider;
+    [SerializeField]private Slider hpSlider;
     private float maxHP = 0F;
     private float spawnTime = 5F;
     public bool IsDie => HP <= 0F;
@@ -22,11 +23,19 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
     {
         _animator = GetComponent<Animator>();
         _transform = GetComponent<Transform>();
+        
+        
     }
     
     private void Update()
     {
-        
+
+
+
+        hpSlider.transform.rotation = Camera.main.transform.rotation;
+           // Quaternion.LookRotation(Vector3.forward, Camera.main.transform.position);
+
+
         if (!target || target.die || !IsRange(agroRange))
         {
             _animator.SetBool("run",false);
@@ -53,6 +62,8 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
     {
         maxHP = hp;
         HP = hp;
+        hpSlider.maxValue = maxHP;
+        hpSlider.value = hp;
     }
     private void Move()
     {
@@ -92,8 +103,11 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
         
         HP -= damage;
         Slider.value = HP;
+        hpSlider.value = HP;
         if (HP <= 0)
         {
+            target = null;
+            
             _animator.SetBool("run",false);
             _animator.SetBool("attack",false);
             _animator.SetBool("die",true);
@@ -113,6 +127,7 @@ public class Enemy : MonoBehaviour,ITakeDamage,ISpawn
         _animator.SetBool("die",false);
         target = null;
         HP = maxHP;
+        hpSlider.value = maxHP;
     }
 
     public void DeSpawn()

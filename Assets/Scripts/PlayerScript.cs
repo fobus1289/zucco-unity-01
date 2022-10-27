@@ -18,7 +18,7 @@ public class PlayerScript : MonoBehaviour,ISpawn
     private Vector3 clickPosition;
     public Slider Slider;
     [SerializeField] private float xMaxSpeed = 300F;
-    [SerializeField] private CinemachineFreeLook _cinemachineFreeLook;
+    public CinemachineFreeLook _cinemachineFreeLook;
     [SerializeField] private float HP = 500F;
     [SerializeField] private Transform weaponSlot;
     [SerializeField] public List<WeaponScript> Weapons;
@@ -109,6 +109,7 @@ public class PlayerScript : MonoBehaviour,ISpawn
                 }
                 
                 var newWeapon = Instantiate(weapon,weaponSlot);
+                newWeapon.isPlayer = true;
                 newWeapon.transform.SetParent(weaponSlot);
                 _currenWeapon = newWeapon;
             });

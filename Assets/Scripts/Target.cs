@@ -9,13 +9,8 @@ public class Target : MonoBehaviour,ITakeDamage
     public int HP = 0;
 
     public bool die => HP <= 0;
-
-
-    private void Start()
-    {
-    }
-
-
+    
+    
     public void TakeDamage(int damage)
     {
         HP -= damage;

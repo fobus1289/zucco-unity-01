@@ -8,7 +8,7 @@ public class WeaponScript : MonoBehaviour
 {
 
     [SerializeField] private int damage;
-
+    public bool isPlayer = false;
 
     private void Start()
     {
@@ -22,10 +22,18 @@ public class WeaponScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var component = other.GetComponent<ITakeDamage>();
-        if (component != null)
+        
+        if (component == null)
         {
-            component.TakeDamage(damage);
+            return;
         }
+
+        if (other.GetComponent<Enemy>() && !isPlayer)
+        {
+            return;
+        }
+        
+        component.TakeDamage(damage);
     }
 
 }

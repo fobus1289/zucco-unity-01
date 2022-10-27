@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &258970677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 258970678}
+  m_Layer: 0
+  m_Name: Weapon:Slot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &258970678
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258970677}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7875134509790464447}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7875134509790565457
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,6 +246,9 @@ GameObject:
   - component: {fileID: 7875134509790464119}
   - component: {fileID: 7875134509797991955}
   - component: {fileID: -1141451134984732890}
+  - component: {fileID: 5841187131652201886}
+  - component: {fileID: 4725851731183943653}
+  - component: {fileID: -5215741170235561785}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Untagged
@@ -274,6 +308,69 @@ MonoBehaviour:
   playerScript: {fileID: 0}
   target: {fileID: 0}
   playerInputScript: {fileID: 0}
+--- !u!114 &5841187131652201886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7875134509790565463}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83a931342536edd41955200d87e85033, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Slider: {fileID: 0}
+  xMaxSpeed: 300
+  _cinemachineFreeLook: {fileID: 0}
+  HP: 500
+  weaponSlot: {fileID: 258970678}
+  Weapons:
+  - {fileID: -8710905726911790202, guid: e84ca8d020eacae4c9ef0f44988e44aa, type: 3}
+  WeaponUI: {fileID: 880988249013870636, guid: 6c534c5864699a5449170a6ab1a25e5c, type: 3}
+  ActionPanelUI: {fileID: 0}
+  mouseLeft:
+    m_Name: Mouse Left
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: d62640c2-ec15-487a-ab61-57ec2ae56899
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 07c20c76-b815-4bfa-ba11-6b7d48646ca5
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Mouse Left
+      m_Flags: 0
+    m_Flags: 0
+--- !u!114 &4725851731183943653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7875134509790565463}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99fc7134bb17fe444a3300713ed3ae7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-5215741170235561785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7875134509790565463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76454c370e76a9547b573713bbabd5ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HP: 400
 --- !u!1 &7875134509790565465
 GameObject:
   m_ObjectHideFlags: 0
@@ -1566,6 +1663,7 @@ Transform:
   - {fileID: 7875134509790464429}
   - {fileID: 7875134509790464405}
   - {fileID: 7875134509790464413}
+  - {fileID: 258970678}
   m_Father: {fileID: 7875134509790464441}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
