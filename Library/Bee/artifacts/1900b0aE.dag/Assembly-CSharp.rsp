@@ -368,6 +368,7 @@
 "Assets/Scripts/ITakeDamage.cs"
 "Assets/Scripts/ITarget.cs"
 "Assets/Scripts/PlayerControllerScript.cs"
+"Assets/Scripts/PlayerInfo.cs"
 "Assets/Scripts/PlayerInputScript.cs"
 "Assets/Scripts/PlayerScript.cs"
 "Assets/Scripts/StartGame.cs"

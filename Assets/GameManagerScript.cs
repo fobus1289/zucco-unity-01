@@ -23,8 +23,37 @@ public class GameManagerScript : MonoBehaviour
         player.GetComponent<PlayerScript>().Slider = Slider;
         _cinemachine.Follow = player.transform;
         _cinemachine.LookAt = player.transform;
+
+        StartCoroutine(SavePlayerInfo(player.GetComponent<PlayerScript>()));
     }
 
+    private IEnumerator SavePlayerInfo(PlayerScript playerScript)
+    {
+        var _currentPlayerInfo = Container.PlayerInfo;
+        var playerName = _currentPlayerInfo.name;
+        var fileName = _currentPlayerInfo.fileName;
+        var playerTransform = playerScript.transform;
+        while (true)
+        {
+            var currentPlayerInfo = Container.PlayerInfo;
+            var playerPosition = playerTransform.position;
+            
+            var playerInfo = new PlayerInfo
+            {
+                name = playerName,
+                fileName = fileName,
+                x = playerPosition.x,
+                y = playerPosition.y,
+                z = playerPosition.z,
+                maxHp = playerScript.HP
+            };
+            
+            playerInfo.Serialize(fileName);
+            Container.PlayerInfo = playerInfo;
+            yield return new WaitForSeconds(5F);
+        }
+    }
+    
     private void Start()
     {
         

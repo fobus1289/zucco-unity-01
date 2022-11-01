@@ -13,10 +13,25 @@ public class StartGame : MonoBehaviour
     
     public void ActionStart()
     {
-        Container.SelectPlayer = _gameMangerUIScript._currentPlayer;
+        var currentPlayer = _gameMangerUIScript._currentPlayer;
         
-        if (Container.SelectPlayer != null)
+        if (currentPlayer != null)
         {
+            var tmpInputField =  _gameMangerUIScript.tmpInputField;
+            var text = tmpInputField.text;
+            
+            var playerInfo = new PlayerInfo
+            {
+                name = text,
+                fileName = text,
+                maxHp = 500,
+            };
+
+            playerInfo.Serialize($"{text}.save");
+            
+            Container.SelectPlayer = currentPlayer;
+            Container.PlayerInfo = playerInfo;
+            
             DontDestroyOnLoad(Container.SelectPlayer.gameObject);
             SceneManager.LoadScene(1);
         }

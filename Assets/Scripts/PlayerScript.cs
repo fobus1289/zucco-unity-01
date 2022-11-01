@@ -19,7 +19,7 @@ public class PlayerScript : MonoBehaviour,ISpawn
     public Slider Slider;
     [SerializeField] private float xMaxSpeed = 300F;
     public CinemachineFreeLook _cinemachineFreeLook;
-    [SerializeField] private float HP = 500F;
+    public float HP = 500F;
     [SerializeField] private Transform weaponSlot;
     [SerializeField] public List<WeaponScript> Weapons;
     [SerializeField] private Button WeaponUI;
